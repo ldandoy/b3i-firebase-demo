@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import {getFirestore, collection, getDocs, doc} from 'firebase/firestore'
+import {getFirestore, collection, getDocs, doc, addDoc, deleteDoc} from 'firebase/firestore'
 
 console.log('Start du programme v1 !');
 
@@ -31,25 +31,29 @@ const afficheFactures = (factures) => {
         ulEl.appendChild(liEl);
     });
 
+    rootEl.appendChild(ulEl);
+
     const buttonsDelete = document.querySelectorAll('.deleteFacture');
     buttonsDelete.forEach(button => {
-        button.addEventListener('click', (event) => {
+        button.addEventListener('click', async (event) => {
             console.log('click');
-            
-            console.log(event.target.getAttribute('data-id'));
+            if (confirm('Etes vous sur de vouloir supprimer cette facture ?')) {
+                console.log(event.target.getAttribute('data-id'));
+                await deleteDoc(doc(db, "factures", event.target.getAttribute('data-id')));
+            }
         });
     });
-
-
-    rootEl.appendChild(ulEl);
 }
 
 const factures = await getFactures(db);
 afficheFactures(factures);
 
 const formEl = document.querySelector('#formAdd form');
-formEl.addEventListener('submit', (event) => {
+formEl.addEventListener('submit', async (event) => {
     event.preventDefault();
 
-    console.log('Submit add form', event.target[0].value, event.target[1].value);
+    await addDoc(collection(db, "factures"), {
+        number: event.target[0].value,
+        totalTTC: event.target[1].value
+    });
 });
