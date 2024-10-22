@@ -46,3 +46,10 @@ const afficheFactures = (factures) => {
 
 const factures = await getFactures(db);
 afficheFactures(factures);
+
+const formEl = document.querySelector('#formAdd form');
+formEl.addEventListener('submit', (event) => {
+    event.preventDefault();
+
+    console.log('Submit add form', event.target[0].value, event.target[1].value);
+});

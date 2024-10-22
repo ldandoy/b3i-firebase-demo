@@ -8,6 +8,21 @@
     </head>
     <body>
         <h1>Listes des factures</h1>
+        <div id="formAdd">
+            <form>
+                <div>
+                    <label for="numero">Numéro</label>
+                    <input type="text" id="numero" name="numero" placeholder="Entrez le numéro de facture" />
+                </div>
+                <div>
+                    <label for="totalTTC">Total TTC</label>
+                    <input type="number" id="totalTTC" name="totalTTC" placeholder="Entrez le montant TTC de la facture" />
+                </div>
+                <div>
+                    <button type="submit">Enregistrer</button>
+                </div>
+            </form>
+        </div>
         <div id="root"></div>
     </body>
 </html>
