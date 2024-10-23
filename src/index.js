@@ -1,5 +1,14 @@
 import { initializeApp } from "firebase/app";
-import {getFirestore, collection, getDocs, doc, addDoc, deleteDoc} from 'firebase/firestore'
+import {
+    getFirestore, 
+    collection, 
+    getDocs, 
+    doc, 
+    addDoc, 
+    deleteDoc, 
+    onSnapshot,
+    query
+} from 'firebase/firestore'
 
 console.log('Start du programme v1 !');
 
@@ -15,12 +24,12 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-const getFactures = async (db) => {
+/*const getFactures = async (db) => {
     const facturesCol = collection(db, 'factures');
     const facturesSnapshot = await getDocs(facturesCol);
     const factures = facturesSnapshot.docs.map(doc => ({...doc.data(), id: doc.id}));
     return factures;
-}
+}*/
 
 const afficheFactures = (factures) => {
     const rootEl = document.querySelector('#root');
@@ -31,6 +40,7 @@ const afficheFactures = (factures) => {
         ulEl.appendChild(liEl);
     });
 
+    rootEl.innerHTML = '';
     rootEl.appendChild(ulEl);
 
     const buttonsDelete = document.querySelectorAll('.deleteFacture');
@@ -45,8 +55,16 @@ const afficheFactures = (factures) => {
     });
 }
 
-const factures = await getFactures(db);
-afficheFactures(factures);
+// const factures = await getFactures(db);
+// afficheFactures(factures);
+const q = query(collection(db, "factures"));
+onSnapshot(q, (snapshot) => {
+    let factures = [];
+    snapshot.docs.forEach((doc) => {
+        factures.push({...doc.data(), id: doc.id});
+    });
+    afficheFactures(factures);
+});
 
 const formEl = document.querySelector('#formAdd form');
 formEl.addEventListener('submit', async (event) => {
